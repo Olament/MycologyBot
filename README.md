@@ -1,7 +1,7 @@
 <h1 align="center">
   <img src="https://github.com/Olament/MycologyBot/blob/master/img/mushroom.png" alt="Mushroom logo" width="100">
   <br>
-    MycologyBot
+    <a href="https://www.reddit.com/r/mycology/">/r/Mycology</a> Bot
   <br>
 </h1>
 
