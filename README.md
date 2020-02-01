@@ -5,7 +5,7 @@
   <br>
 </h1>
 
-MycologyBot is a Reddit bot that dedicated to identify mushroom images from [/r/Mycology](https://www.reddit.com/r/mycology/) by using the [DeepMushroom API](https://github.com/Olament/DeepMushroom-docker). 
+MycologyBot is a Reddit bot that dedicated to identify mushroom images from [/r/Mycology](https://www.reddit.com/r/mycology/) using the [DeepMushroom API](https://github.com/Olament/DeepMushroom-docker). 
 
 ##  Getting Started
 Setup your ```praw.ini``` configuration file inside app directory
