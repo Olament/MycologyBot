@@ -106,7 +106,7 @@ def reply_post(submission, result):
         comment += "*{}*|{}\n".format(res['class_name'], res['probability'])
 
     comment += "\n***\n"
-    comment += "^^MycologyBot{0}empowered{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
+    comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
     # try:
     #     submission.reply(comment)
