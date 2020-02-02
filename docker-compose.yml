@@ -1,0 +1,10 @@
+version: '2'
+services:
+    bot:
+        container_name: MycologyBot 
+        build: .
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "10"
