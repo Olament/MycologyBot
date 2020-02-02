@@ -42,7 +42,7 @@ def process_submission(submission):
 
     # skip if post is not tagged with "ID Request"
     if not is_request(submission):
-        logger.info('Skip the post since it is not an ID request')
+        logger.info('[{}] Skip the post since it is not an ID request'.format(submission.id))
         return
 
     response = requests.get(submission.url)
@@ -67,10 +67,12 @@ def process_submission(submission):
 def is_valid_image_url(url):
     return url[-3:] == 'jpg'
 
+
 def is_request(submission):
-    return submission.link_flair_text != 'ID request' \
+    return submission.link_flair_text == 'ID request' \
            or 'ID' in submission.title.upper() \
            or 'WHAT' in submission.title.upper()
+
 
 def is_visted(comments):
     for comment in comments:
