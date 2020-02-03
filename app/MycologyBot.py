@@ -4,11 +4,10 @@ import json
 import logging
 import traceback
 
-# constant
-BOT_USERNAME = 'Mycology_Bot'
+BOT_USERNAME = 'Mycology_Bot'  # constant
 
-# global logger
-logger = logging.getLogger()
+logger = logging.getLogger()  # global logger
+
 
 def main():
     # init reddit bot from praw.ini
@@ -23,12 +22,12 @@ def main():
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
 
-    # submission = reddit.submission(url='https://www.reddit.com/r/mycology/comments/exfuq2/found_growing_in_yard_south_florida_what_kind_are/')
-    # process_submission(submission)
+    submission = reddit.submission(url='https://www.reddit.com/r/mycology/comments/exy5wm/unidentified_forest_jelly_eastern_appalachian/')
+    process_submission(submission)
 
     # process submission with depp mushroom API
-    for submission in subreddit.stream.submissions():
-        process_submission(submission)
+    # for submission in subreddit.stream.submissions():
+    #     process_submission(submission)
 
 
 def process_submission(submission):
@@ -105,14 +104,15 @@ def reply_post(submission, result):
     for res in result:
         comment += "*{}*|{}\n".format(res['class_name'], res['probability'])
 
+    comment += "\nDisclaimer: the prediction given by this bot **is not 100% accurate** and you should not use this information to determine the edibility of mushroom.\n"
     comment += "\n***\n"
     comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
-    # try:
-    #     submission.reply(comment)
-    # except Exception as e:
-    #     logger.error(traceback.format_exc())
-    #     return
+    try:
+        submission.reply(comment)
+    except Exception as e:
+        logger.error(traceback.format_exc())
+        return
 
     logger.info("[{}] Comment submitted!".format(submission.id))
 
