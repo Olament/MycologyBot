@@ -3,6 +3,9 @@ import requests
 import json
 import logging
 import traceback
+import time
+from datetime import datetime, timedelta
+
 
 BOT_USERNAME = 'Mycology_Bot'  # constant
 
@@ -22,31 +25,27 @@ def main():
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
 
-    # fetch both comment and submission stream
-    # comment_stream = subreddit.stream.comments(pause_after=0)
-    # submission_stream = subreddit.stream.submissions(pause_after=0)
+    # submission, comment, and own_comment stream
+    # comment_stream = subreddit.stream.comments(pause_after=-1)
+    submission_stream = subreddit.stream.submissions(pause_after=-1, skip_existing=True)
 
-    # while True:
-    #     print("**** start comment ****")
-    #     for comment in comment_stream:
-    #         if comment is None:
-    #             print("**** end comment ****")
-    #             break
-    #         print(comment.author)
-    #
-    #     print("**** start submission ****")
-    #     for submission in submission_stream:
-    #         if submission is None:
-    #             print("**** end submission ****")
-    #             break
-    #         print(submission.title)
+    while True:
+        logger.info('**** START check submission stream ****')
+        for submission in submission_stream:
+            if submission is None:
+                break
+            process_submission(submission)
+        logger.info('**** END check submission stream ****')
+
+        logger.info('**** START check bot own comment ****')
+        for comment in reddit.user.me().comments.new(limit=20):
+            check_own_comment(comment)
+        logger.info('**** END check bot own comment ****')
+
+        time.sleep(60) # idie
 
     # submission = reddit.submission(url='https://www.reddit.com/r/mycology/comments/exz3sj/stroll_through_cahuita_national_park_in_costa/')
     # process_submission(submission)
-
-    # process submission with depp mushroom API
-    for submission in subreddit.stream.submissions():
-        process_submission(submission)
 
 
 def process_submission(submission):
@@ -70,7 +69,7 @@ def process_submission(submission):
     data = response.content
     logger.info('[{}] Image retrieved!'.format(submission.id))
 
-    if is_visted(submission.comments):
+    if is_visited(submission.comments):
         logger.info('[{}] Skip the post since replied before'.format(submission.id))
         return
 
@@ -82,8 +81,14 @@ def process_submission(submission):
         logger.error('[{}] Failed to retrieve prediction from server'.format(submission.id))
 
 
-def process_comment(comment):
-    return
+def check_own_comment(comment):
+    # delete the comment if it has negative score and has been sometime
+    if comment.score <= -1 and datetime.utcfromtimestamp(comment.created_utc) < datetime.utcnow() - timedelta(hours=1):
+        logger.info("[{}] Delete comment since low score".format(comment.id))
+        logger.info("[{}] Delete from post: {}".format(comment.id, comment.submission.permalink))
+        logger.info("[{}] Deleted content: {}".format(comment.id, comment.body.replace('\n', ' ')))
+        comment.delete()
+
 
 
 def is_valid_image_url(url):
@@ -96,7 +101,7 @@ def is_request(submission):
            or 'WHAT' in submission.title.upper()
 
 
-def is_visted(comments):
+def is_visited(comments):
     for comment in comments:
         if comment.author == BOT_USERNAME:
             return True
@@ -131,11 +136,11 @@ def reply_post(submission, result):
     comment += "\n***\n"
     comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
-    # try:
-    #     submission.reply(comment)
-    # except Exception as e:
-    #     logger.error(traceback.format_exc())
-    #     return
+    try:
+        submission.reply(comment)
+    except Exception as e:
+        logger.error(traceback.format_exc())
+        return
 
     logger.info("[{}] Comment submitted!".format(submission.id))
 
