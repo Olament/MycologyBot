@@ -22,12 +22,31 @@ def main():
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
 
-    submission = reddit.submission(url='https://www.reddit.com/r/mycology/comments/exy5wm/unidentified_forest_jelly_eastern_appalachian/')
-    process_submission(submission)
+    # fetch both comment and submission stream
+    # comment_stream = subreddit.stream.comments(pause_after=0)
+    # submission_stream = subreddit.stream.submissions(pause_after=0)
+
+    # while True:
+    #     print("**** start comment ****")
+    #     for comment in comment_stream:
+    #         if comment is None:
+    #             print("**** end comment ****")
+    #             break
+    #         print(comment.author)
+    #
+    #     print("**** start submission ****")
+    #     for submission in submission_stream:
+    #         if submission is None:
+    #             print("**** end submission ****")
+    #             break
+    #         print(submission.title)
+
+    # submission = reddit.submission(url='https://www.reddit.com/r/mycology/comments/exz3sj/stroll_through_cahuita_national_park_in_costa/')
+    # process_submission(submission)
 
     # process submission with depp mushroom API
-    # for submission in subreddit.stream.submissions():
-    #     process_submission(submission)
+    for submission in subreddit.stream.submissions():
+        process_submission(submission)
 
 
 def process_submission(submission):
@@ -63,6 +82,10 @@ def process_submission(submission):
         logger.error('[{}] Failed to retrieve prediction from server'.format(submission.id))
 
 
+def process_comment(comment):
+    return
+
+
 def is_valid_image_url(url):
     return url[-3:] == 'jpg'
 
@@ -95,7 +118,7 @@ def get_classify(data):
 
 def reply_post(submission, result):
     # no need to reply with low confident prediction
-    if float(result[0]['probability']) < 0.20:
+    if float(result[0]['probability']) < 0.40:
         logger.info('[{}] Do not reply due to low prediction confidence'.format(submission.id))
         return
 
@@ -108,11 +131,11 @@ def reply_post(submission, result):
     comment += "\n***\n"
     comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
-    try:
-        submission.reply(comment)
-    except Exception as e:
-        logger.error(traceback.format_exc())
-        return
+    # try:
+    #     submission.reply(comment)
+    # except Exception as e:
+    #     logger.error(traceback.format_exc())
+    #     return
 
     logger.info("[{}] Comment submitted!".format(submission.id))
 
