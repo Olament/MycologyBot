@@ -4,6 +4,8 @@ import json
 import logging
 import traceback
 import time
+from io import BytesIO
+from PIL import Image
 from datetime import datetime, timedelta
 
 
@@ -44,7 +46,7 @@ def main():
 
         time.sleep(60) # idie
 
-    # submission = reddit.submission(url='https://www.reddit.com/r/mycology/comments/exz3sj/stroll_through_cahuita_national_park_in_costa/')
+    # submission = reddit.submission(url='https://www.reddit.com/r/test/comments/ex8ly2/id/')
     # process_submission(submission)
 
 
@@ -90,6 +92,11 @@ def check_own_comment(comment):
         comment.delete()
 
 
+def convertToJpeg(im):
+    with BytesIO() as f:
+        im.save(f, format='JPEG')
+        return f.getvalue()
+
 
 def is_valid_image_url(url):
     return url[-3:] == 'jpg'
@@ -132,7 +139,7 @@ def reply_post(submission, result):
     for res in result:
         comment += "*{}*|{}\n".format(res['class_name'], res['probability'])
 
-    comment += "\nDisclaimer: the prediction given by this bot **is not 100% accurate** and you should not use this information to determine the edibility of mushroom.\n"
+    comment += "\nDisclaimer: This bot is not in any way affiliated with r/mycology or the mode team. The prediction given by this bot **is not 100% accurate** and you should not use this information to determine the edibility of mushroom.\n"
     comment += "\n***\n"
     comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
