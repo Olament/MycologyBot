@@ -20,3 +20,23 @@ Build and run the docker
 ```cmd
 docker build && docker run
 ```
+
+## Behavior
+The bot will reply a post at [/r/Mycology](https://www.reddit.com/r/mycology/) if the post is an ID request and the bot is confident enough in its prediction. The reply will have following format
+
+>These are the Top-5 predictions given by AI.
+>
+>Species | Probability
+>:--|:--
+>*sepcies_1*|prob_1
+>*sepcies_2*|prob_2
+>*sepcies_3*|prob_3
+>*sepcies_4*|prob_4
+>*sepcies_5*|prob_5
+>
+>Disclaimer: This bot is not in any way affiliated with r/mycology or the mode team. The prediction given by this bot **is not 100% accurate** and you should not use this information to determine the edibility of mushroom.
+> ***
+>MycologyBot power by [DeepMushroom](https://github.com/Olament/DeepMushroom) API | [GitHub](https://github.com/Olament/MycologyBot)
+
+## Acknowledge
+Mycology Bot is a peronsal project and is not in any way affiliated with [/r/Mycology](https://www.reddit.com/r/mycology/) or the mode team
