@@ -4,12 +4,9 @@ import json
 import logging
 import traceback
 import time
-from io import BytesIO
-from PIL import Image
 from datetime import datetime, timedelta
 
-
-BOT_USERNAME = 'Mycology_Bot'  # constant
+from app import utils
 
 logger = logging.getLogger()  # global logger
 
@@ -55,12 +52,12 @@ def process_submission(submission):
     logger.info('[{}] post url: {}'.format(submission.id, submission.url))
 
     # skip post w/o image
-    if submission.is_self or not is_valid_image_url(submission.url):
+    if submission.is_self or not utils.is_valid_image_url(submission.url):
         logger.info('[{}] Skip the post since it does not contain image'.format(submission.id))
         return
 
     # skip if post is not tagged with "ID Request"
-    if not is_request(submission):
+    if not utils.is_request(submission):
         logger.info('[{}] Skip the post since it is not an ID request'.format(submission.id))
         return
 
@@ -71,7 +68,7 @@ def process_submission(submission):
     data = response.content
     logger.info('[{}] Image retrieved!'.format(submission.id))
 
-    if is_visited(submission.comments):
+    if utils.is_visited(submission.comments):
         logger.info('[{}] Skip the post since replied before'.format(submission.id))
         return
 
@@ -90,29 +87,6 @@ def check_own_comment(comment):
         logger.info("[{}] Delete from post: {}".format(comment.id, comment.submission.permalink))
         logger.info("[{}] Deleted content: {}".format(comment.id, comment.body.replace('\n', ' ')))
         comment.delete()
-
-
-def convertToJpeg(im):
-    with BytesIO() as f:
-        im.save(f, format='JPEG')
-        return f.getvalue()
-
-
-def is_valid_image_url(url):
-    return url[-3:] == 'jpg'
-
-
-def is_request(submission):
-    return submission.link_flair_text == 'ID request' \
-           or 'ID' in submission.title.upper() \
-           or 'WHAT' in submission.title.upper()
-
-
-def is_visited(comments):
-    for comment in comments:
-        if comment.author == BOT_USERNAME:
-            return True
-    return False
 
 
 def get_classify(data):
