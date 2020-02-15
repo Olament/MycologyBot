@@ -1,3 +1,5 @@
+# modified based on https://github.com/KurzGedanke/Imgur-URL code
+
 import re
 import argparse
 import requests
