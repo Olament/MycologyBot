@@ -52,6 +52,7 @@ def main():
 def process_submission(submission):
     logger.info('[{}] New post title: {}'.format(submission.id, submission.title))
     logger.info('[{}] post link: {}'.format(submission.id, submission.permalink))
+    logger.info('[{}] url link: {}'.format(submission.id, submission.url))
 
     # retrieve image url
     image_url = ""
