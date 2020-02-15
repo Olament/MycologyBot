@@ -7,8 +7,10 @@ import time
 from datetime import datetime, timedelta
 
 from app import utils
+from app import imgur
 
 logger = logging.getLogger()  # global logger
+imgurURL = imgur.ImgurURL() # parser that convert imgur url to image link
 
 
 def main():
@@ -26,7 +28,8 @@ def main():
 
     # submission, comment, and own_comment stream
     # comment_stream = subreddit.stream.comments(pause_after=-1)
-    submission_stream = subreddit.stream.submissions(pause_after=-1, skip_existing=True)
+    # submission_stream = subreddit.stream.submissions(pause_after=-1, skip_existing=True)
+    submission_stream = subreddit.stream.submissions(pause_after=-1)
 
     while True:
         logger.info('**** START check submission stream ****')
@@ -51,8 +54,20 @@ def process_submission(submission):
     logger.info('[{}] New post title: {}'.format(submission.id, submission.title))
     logger.info('[{}] post url: {}'.format(submission.id, submission.url))
 
-    # skip post w/o image
-    if submission.is_self or not utils.is_valid_image_url(submission.url):
+    # retrieve image url
+    image_url = ""
+    logger.info("[{}] Attempt to retrieve image url".format(submission.id))
+    if utils.is_valid_image_url(submission.url):
+        image_url = submission.url
+        logger.info("[{}] Retrieved regular post image url".format(submission.id))
+    elif 'imgur' in submission.url:
+        try:
+            image_url = imgurURL.get_imgur_urls(submission.url)[0] # only get the first pictures
+            logger.info("[{}] Retrieved imgur post image url".format(submission.id))
+        except Exception as e:
+            logger.exception("[{}] Failed to parse imgur url".format(submission.id))
+            return
+    else:
         logger.info('[{}] Skip the post since it does not contain image'.format(submission.id))
         return
 
@@ -61,16 +76,17 @@ def process_submission(submission):
         logger.info('[{}] Skip the post since it is not an ID request'.format(submission.id))
         return
 
-    response = requests.get(submission.url)
+    # skip if visited this post before
+    if utils.is_visited(submission.comments):
+        logger.info('[{}] Skip the post since replied before'.format(submission.id))
+        return
+
+    response = requests.get(image_url)
     if not response.headers["Content-Type"].startswith("image/"):
         logging.warning('[{}] Cannot retrieve image from url'.format(submission.id))
         return
     data = response.content
     logger.info('[{}] Image retrieved!'.format(submission.id))
-
-    if utils.is_visited(submission.comments):
-        logger.info('[{}] Skip the post since replied before'.format(submission.id))
-        return
 
     result = get_classify(data)
     if result:
@@ -117,11 +133,11 @@ def reply_post(submission, result):
     comment += "\n***\n"
     comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
-    try:
-        submission.reply(comment)
-    except Exception as e:
-        logger.error(traceback.format_exc())
-        return
+    # try:
+    #     submission.reply(comment)
+    # except Exception as e:
+    #     logger.error(traceback.format_exc())
+    #     return
 
     logger.info("[{}] Comment submitted!".format(submission.id))
 
