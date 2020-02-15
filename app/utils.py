@@ -1,14 +1,17 @@
 from io import BytesIO
+from PIL import Image
 
+def convert_to_jpg(data):
+    with BytesIO() as new_data:
+        image = Image.open(BytesIO(data))
+        image = image.convert('RGB')
+        image.save(new_data, 'jpg')
+        return new_data
 
-def convertToJpeg(im):
-    with BytesIO() as f:
-        im.save(f, format='JPEG')
-        return f.getvalue()
 
 
 def is_valid_image_url(url):
-    return url[-3:] == 'jpg'
+    return url[-3:] == 'jpg' or url[-3:] == 'png'
 
 
 def is_request(submission):

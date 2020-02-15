@@ -88,6 +88,8 @@ def process_submission(submission):
     data = response.content
     logger.info('[{}] Image retrieved!'.format(submission.id))
 
+    data = utils.convert_to_jpg(data)  # convert png to jpg since png crash the server
+
     result = get_classify(data)
     if result:
         logger.info('[{}] Prediction: '.format(submission.id) + str(result))
@@ -97,7 +99,7 @@ def process_submission(submission):
 
 
 def check_own_comment(comment):
-    # delete the comment if it has negative score and has been sometime
+    # delete the comment if it has negative score and has been some time
     if comment.score <= -1 and datetime.utcfromtimestamp(comment.created_utc) < datetime.utcnow() - timedelta(hours=1):
         logger.info("[{}] Delete comment since low score".format(comment.id))
         logger.info("[{}] Delete from post: {}".format(comment.id, comment.submission.permalink))
