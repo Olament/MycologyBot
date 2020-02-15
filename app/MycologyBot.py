@@ -28,8 +28,7 @@ def main():
 
     # submission, comment, and own_comment stream
     # comment_stream = subreddit.stream.comments(pause_after=-1)
-    # submission_stream = subreddit.stream.submissions(pause_after=-1, skip_existing=True)
-    submission_stream = subreddit.stream.submissions(pause_after=-1)
+    submission_stream = subreddit.stream.submissions(pause_after=-1, skip_existing=True)
 
     while True:
         logger.info('**** START check submission stream ****')
@@ -52,7 +51,7 @@ def main():
 
 def process_submission(submission):
     logger.info('[{}] New post title: {}'.format(submission.id, submission.title))
-    logger.info('[{}] post url: {}'.format(submission.id, submission.url))
+    logger.info('[{}] post link: {}'.format(submission.id, submission.permalink))
 
     # retrieve image url
     image_url = ""
@@ -70,6 +69,7 @@ def process_submission(submission):
     else:
         logger.info('[{}] Skip the post since it does not contain image'.format(submission.id))
         return
+    logger.info("[{}] image link: {}".format(submission.id, image_url))
 
     # skip if post is not tagged with "ID Request"
     if not utils.is_request(submission):
@@ -135,11 +135,11 @@ def reply_post(submission, result):
     comment += "\n***\n"
     comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
-    # try:
-    #     submission.reply(comment)
-    # except Exception as e:
-    #     logger.error(traceback.format_exc())
-    #     return
+    try:
+        submission.reply(comment)
+    except Exception as e:
+        logger.error(traceback.format_exc())
+        return
 
     logger.info("[{}] Comment submitted!".format(submission.id))
 
