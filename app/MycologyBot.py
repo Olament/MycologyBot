@@ -5,8 +5,7 @@ import logging
 import time
 from datetime import datetime, timedelta
 
-from app.utils import utils
-from app.utils import imgur
+from utils import utils, imgur
 
 logger = logging.getLogger()  # global logger
 imgurURL = imgur.ImgurURL() # parser that convert imgur url to image link
