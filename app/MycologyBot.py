@@ -2,12 +2,11 @@ import praw
 import requests
 import json
 import logging
-import traceback
 import time
 from datetime import datetime, timedelta
 
-from app import utils
-from app import imgur
+from app.utils import utils
+from app.utils import imgur
 
 logger = logging.getLogger()  # global logger
 imgurURL = imgur.ImgurURL() # parser that convert imgur url to image link
