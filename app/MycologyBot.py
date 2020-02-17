@@ -2,6 +2,7 @@ import praw
 import requests
 import json
 import logging
+import traceback
 import time
 from datetime import datetime, timedelta
 
