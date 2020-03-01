@@ -129,7 +129,7 @@ def reply_post(submission, result):
     comment = "These are the Top-5 predictions given by AI.\n\n"
     comment += "Species | Probability\n:--|:--\n"
     for res in result:
-        comment += "*{}*|{}\n".format(res['class_name'], res['probability'])
+        comment += "*[{}]({})*|{}\n".format(res['class_name'], res['inat_url'], res['probability'])
 
     comment += "\nDisclaimer: This bot is not in any way affiliated with r/mycology or the mod team. The prediction given by this bot **is not 100% accurate** and you should not use this information to determine the edibility of mushroom.\n"
     comment += "\n***\n"
