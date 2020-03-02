@@ -131,7 +131,7 @@ def reply_post(submission, result):
     for res in result:
         comment += "*[{}]({})*|{}\n".format(res['class_name'], res['inat_url'], res['probability'])
 
-    comment += "\nDisclaimer: This bot is not in any way affiliated with r/mycology or the mod team. The prediction given by this bot **is not 100% accurate** and you should not use this information to determine the edibility of mushroom.\n"
+    comment += "\nDisclaimer: This bot is not in any way affiliated with r/mycology or the mod team. The prediction given by this bot **is not 100% accurate** and you should not use this information to determine the edibility of mushrooms.\n"
     comment += "\n***\n"
     comment += "^^MycologyBot{0}power{0}by{0}[DeepMushroom](https://github.com/Olament/DeepMushroom){0}API{0}|{0}[GitHub](https://github.com/Olament/MycologyBot)\n\n".format("&#32;")
 
