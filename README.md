@@ -5,6 +5,11 @@
   <br>
 </h1>
 
+![](https://img.shields.io/uptimerobot/status/m784835447-ba7a5855ae40e735667bab1f)
+![](https://img.shields.io/uptimerobot/ratio/7/m784835447-ba7a5855ae40e735667bab1f)
+![](https://img.shields.io/badge/dynamic/json?color=orange&label=reddit%20karma&query=data.comment_karma&url=https%3A%2F%2Fwww.reddit.com%2Fuser%2FMycology_Bot%2Fabout.json)
+
+
 MycologyBot is a Reddit bot that dedicated to identify mushroom images from [/r/Mycology](https://www.reddit.com/r/mycology/) using the [DeepMushroom API](https://github.com/Olament/DeepMushroom-docker). You can visit [/u/Mycology_Bot](https://www.reddit.com/user/Mycology_Bot) to see this bot in action.
 
 ##  Getting Started
