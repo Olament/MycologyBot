@@ -15,7 +15,7 @@ imgurURL = imgur.ImgurURL() # parser that convert imgur url to image link
 def main():
     # init reddit bot from praw.ini
     reddit = praw.Reddit('mycology', user_agent='MycologyBot by /u/flyelement')
-    subreddit = reddit.subreddit('Mycology')
+    subreddit = reddit.multireddit('Mycology', 'mushroomID')
 
     # init logging
     handler = logging.StreamHandler()
